@@ -54,10 +54,10 @@ public class JavaGameClientMain extends JFrame {
 	public JavaGameClientMain() {
 		setBackground(new Color(255, 255, 255));
 		
-		icon1 = new ImageIcon("C:\\Users\\qhrms.DESKTOP-6KE9FVU\\Downloads\\bomberman\\main.jpg");
-		icon2 = new ImageIcon("C:\\Users\\qhrms.DESKTOP-6KE9FVU\\Downloads\\bomberman\\double.png");
-		icon3 = new ImageIcon("C:\\Users\\qhrms.DESKTOP-6KE9FVU\\Downloads\\bomberman\\chara_shiro.png");
-		icon4 = new ImageIcon("C:\\Users\\qhrms.DESKTOP-6KE9FVU\\Downloads\\bomberman\\image5.jpg");
+		icon1 = new ImageIcon("C:/Users/qhrms.DESKTOP-6KE9FVU/git/repository/JavaGameClient/images/main.jpg");
+		icon2 = new ImageIcon("C:/Users/qhrms.DESKTOP-6KE9FVU/git/repository/JavaGameClient/images/double.png");
+		icon3 = new ImageIcon("C:/Users/qhrms.DESKTOP-6KE9FVU/git/repository/JavaGameClient/images/chara_shiro.png");
+		icon4 = new ImageIcon("C:/Users/qhrms.DESKTOP-6KE9FVU/git/repository/JavaGameClient/images/image5.png");
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 604, 502);

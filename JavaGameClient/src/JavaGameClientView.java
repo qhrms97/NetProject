@@ -38,6 +38,8 @@ import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Color;
+import java.awt.Dimension;
+
 import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.JToggleButton;
@@ -81,17 +83,32 @@ public class JavaGameClientView extends JFrame {
 	
 	JPanel panel;
 	private Graphics gc;
-	private int pen_size = 2; // minimum 2
-
+		
+	ImageIcon darkbackground;
+	ImageIcon face;
+	
 	/**
 	 * Create the frame.
 	 * @throws BadLocationException 
 	 */
 	public JavaGameClientView(String username, String ip_addr, String port_no)  {
+		
+		darkbackground = new ImageIcon("C:/Users/qhrms.DESKTOP-6KE9FVU/git/repository/JavaGameClient/images/aqua.jpg");
+		face = new ImageIcon("C:/Users/qhrms.DESKTOP-6KE9FVU/git/repository/JavaGameClient/images/chara_mizu.png");
+		
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 645, 540);
-		contentPane = new JPanel();
+		contentPane = new JPanel() {
+				public void paintComponent(Graphics g) {
+					//g.drawImage(icon4.getImage(), 0, 0, null); // full size
+					Dimension d = getSize();
+					 g.drawImage(darkbackground.getImage(), 0, 0, d.width, d.height, null); // get size
+					
+					 setOpaque(false); //그림을 표시하게 설정,투명하게 조절
+	                super.paintComponent(g);
+				}
+		};
 		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -107,20 +124,22 @@ public class JavaGameClientView extends JFrame {
 		scrollPane.setViewportView(textArea);
 
 		table = new JTable();
-		table.setBounds(27, 170, 157, 321);
+		table.setBounds(27, 204, 157, 287);
 		contentPane.add(table);
 		
-		myinfo = new JPanel();
+		myinfo = new JPanel(){
+			public void paintComponent(Graphics g) {
+				//g.drawImage(icon4.getImage(), 0, 0, null); // full size
+				Dimension d = getSize();
+				g.drawImage(face.getImage(), 0, 0, d.width, d.height, null); // get size
+				
+				setOpaque(false); //그림을 표시하게 설정,투명하게 조절
+                super.paintComponent(g);
+			}
+		};
+		myinfo.setBackground(Color.WHITE);
 		myinfo.setBounds(27, 10, 157, 146);
 		contentPane.add(myinfo);
-		
-		lblUserName = new JLabel("Name");
-		myinfo.add(lblUserName);
-		lblUserName.setBorder(new LineBorder(new Color(0, 0, 0)));
-		lblUserName.setBackground(Color.WHITE);
-		lblUserName.setFont(new Font("굴림", Font.BOLD, 14));
-		lblUserName.setHorizontalAlignment(SwingConstants.CENTER);
-		lblUserName.setText(username);
 		
 		txtInput = new JTextField();
 		txtInput.setBounds(208, 452, 258, 40);
@@ -153,6 +172,15 @@ public class JavaGameClientView extends JFrame {
 		panel.setBackground(Color.WHITE);
 		panel.setBounds(208, 10, 400, 253);
 		contentPane.add(panel);
+		
+		lblUserName = new JLabel("Name");
+		lblUserName.setBounds(62, 163, 78, 19);
+		contentPane.add(lblUserName);
+		lblUserName.setBorder(new LineBorder(new Color(0, 0, 0)));
+		lblUserName.setBackground(Color.WHITE);
+		lblUserName.setFont(new Font("굴림", Font.BOLD, 14));
+		lblUserName.setHorizontalAlignment(SwingConstants.CENTER);
+		lblUserName.setText(username);
 		gc = panel.getGraphics();
 
 		try {
@@ -219,7 +247,7 @@ public class JavaGameClientView extends JFrame {
 						else
 							AppendText(msg);
 						break;
-					case "300": // Image 첨부
+					/* case "300": // Image 첨부
 						if (cm.UserName.equals(UserName))
 							AppendTextR("[" + cm.UserName + "]");
 						else
@@ -228,7 +256,7 @@ public class JavaGameClientView extends JFrame {
 						break;
 					case "500": // Mouse Event 수신
 						DoMouseEvent(cm);
-						break;
+						break; */
 					}
 				} catch (IOException e) {
 					AppendText("ois.readObject() error");
@@ -249,22 +277,23 @@ public class JavaGameClientView extends JFrame {
 		}
 	}
 
-	// Mouse Event 수신 처리
-	public void DoMouseEvent(ChatMsg cm) {
+	// Mouse Event 수신 처리 - 미사용
+	/* public void DoMouseEvent(ChatMsg cm) {
 		Color c;
 		if (cm.UserName.matches(UserName)) // 본인 것은 이미 Local 로 그렸다.
 			return;
 		c = new Color(255, 0, 0); // 다른 사람 것은 Red
 		gc.setColor(c);
 		gc.fillOval(cm.mouse_e.getX() - pen_size/2, cm.mouse_e.getY() - cm.pen_size/2, cm.pen_size, cm.pen_size);
-	}
+	} */
 
+	/* 미사용
 	public void SendMouseEvent(MouseEvent e) {
 		ChatMsg cm = new ChatMsg(UserName, "500", "MOUSE");
 		cm.mouse_e = e;
 		cm.pen_size = pen_size;
 		SendObject(cm);
-	}
+	} */
 
 	/*class MyMouseWheelEvent implements MouseWheelListener {
 		@Override
