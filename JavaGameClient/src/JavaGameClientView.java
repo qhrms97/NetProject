@@ -50,6 +50,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
+import java.awt.Button;
 
 public class JavaGameClientView extends JFrame {
 	/**
@@ -71,21 +72,28 @@ public class JavaGameClientView extends JFrame {
 	private ObjectOutputStream oos;
 
 	private JLabel lblUserName;
-	// private JTextArea textArea;
 	private JTextPane textArea;
 
 	private Frame frame;
 	private FileDialog fd;
 
 	private JPanel myinfo;
-	
 	private JTable table;
-	
-	JPanel panel;
 	private Graphics gc;
-		
+	
+	private JPanel title;
+	
+	private JButton btnRoomButton_1;
+	private JButton btnRoomButton_2;
+	private JButton btnRoomButton_3;
+	private JButton btnRoomButton_4;
+	private JButton btnRoomButton_5;
+	private JButton btnRoomButton_6;
+	
 	ImageIcon darkbackground;
 	ImageIcon face;
+	ImageIcon button;
+	ImageIcon titleImg;
 	
 	/**
 	 * Create the frame.
@@ -95,10 +103,12 @@ public class JavaGameClientView extends JFrame {
 		
 		darkbackground = new ImageIcon("C:/Users/qhrms.DESKTOP-6KE9FVU/git/repository/JavaGameClient/images/aqua.jpg");
 		face = new ImageIcon("C:/Users/qhrms.DESKTOP-6KE9FVU/git/repository/JavaGameClient/images/chara_mizu.png");
+		button = new ImageIcon("C:/Users/qhrms.DESKTOP-6KE9FVU/git/repository/JavaGameClient/images/blue.jpg");
+		titleImg = new ImageIcon("C:/Users/qhrms.DESKTOP-6KE9FVU/git/repository/JavaGameClient/images/title.png");
 		
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 645, 540);
+		setBounds(100, 100, 645, 614);
 		contentPane = new JPanel() {
 				public void paintComponent(Graphics g) {
 					//g.drawImage(icon4.getImage(), 0, 0, null); // full size
@@ -115,16 +125,16 @@ public class JavaGameClientView extends JFrame {
 		contentPane.setLayout(null);
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(208, 290, 400, 146);
+		scrollPane.setBounds(208, 340, 400, 146);
 		contentPane.add(scrollPane);
 
 		textArea = new JTextPane();
 		textArea.setEditable(true);
 		textArea.setFont(new Font("굴림체", Font.PLAIN, 14));
-		scrollPane.setViewportView(textArea);
+		scrollPane.setRowHeaderView(textArea);
 
 		table = new JTable();
-		table.setBounds(27, 204, 157, 287);
+		table.setBounds(27, 192, 157, 353);
 		contentPane.add(table);
 		
 		myinfo = new JPanel(){
@@ -142,13 +152,13 @@ public class JavaGameClientView extends JFrame {
 		contentPane.add(myinfo);
 		
 		txtInput = new JTextField();
-		txtInput.setBounds(208, 452, 258, 40);
+		txtInput.setBounds(208, 505, 258, 40);
 		contentPane.add(txtInput);
 		txtInput.setColumns(10);
 
 		btnSend = new JButton("Send");
 		btnSend.setFont(new Font("굴림", Font.PLAIN, 14));
-		btnSend.setBounds(539, 451, 69, 40);
+		btnSend.setBounds(539, 504, 69, 40);
 		contentPane.add(btnSend);
 		setVisible(true);
 
@@ -164,24 +174,70 @@ public class JavaGameClientView extends JFrame {
 				System.exit(0);
 			}
 		});
-		btnNewButton.setBounds(469, 451, 69, 40);
+		btnNewButton.setBounds(469, 504, 69, 40);
 		contentPane.add(btnNewButton);
-
-		panel = new JPanel();
-		panel.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panel.setBackground(Color.WHITE);
-		panel.setBounds(208, 10, 400, 253);
-		contentPane.add(panel);
 		
 		lblUserName = new JLabel("Name");
-		lblUserName.setBounds(62, 163, 78, 19);
+		lblUserName.setBounds(70, 166, 78, 19);
 		contentPane.add(lblUserName);
-		lblUserName.setBorder(new LineBorder(new Color(0, 0, 0)));
+		//lblUserName.setBorder(new LineBorder(new Color(0, 0, 0)));
 		lblUserName.setBackground(Color.WHITE);
-		lblUserName.setFont(new Font("굴림", Font.BOLD, 14));
+		lblUserName.setFont(new Font("Arial", Font.BOLD, 14));
 		lblUserName.setHorizontalAlignment(SwingConstants.CENTER);
 		lblUserName.setText(username);
-		gc = panel.getGraphics();
+		
+		btnRoomButton_1 = new JButton(button);
+		btnRoomButton_1.setBackground(Color.WHITE);
+		btnRoomButton_1.setBorderPainted(true);
+		btnRoomButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnRoomButton_1.setBounds(208, 85, 192, 71);
+		contentPane.add(btnRoomButton_1);
+		
+		btnRoomButton_2 = new JButton(button);
+		btnRoomButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnRoomButton_2.setBounds(416, 85, 192, 71);
+		contentPane.add(btnRoomButton_2);
+		
+		btnRoomButton_3 = new JButton(button);
+		btnRoomButton_3.setBounds(416, 165, 192, 71);
+		contentPane.add(btnRoomButton_3);
+		
+		btnRoomButton_4 = new JButton(button);
+		btnRoomButton_4.setBounds(208, 165, 192, 71);
+		contentPane.add(btnRoomButton_4);
+		
+		btnRoomButton_5 = new JButton(button);
+		btnRoomButton_5.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnRoomButton_5.setBounds(416, 246, 192, 71);
+		contentPane.add(btnRoomButton_5);
+		
+		btnRoomButton_6 = new JButton(button);
+		btnRoomButton_6.setBounds(208, 246, 192, 71);
+		contentPane.add(btnRoomButton_6);
+		
+		JPanel title = new JPanel() {
+			public void paintComponent(Graphics g) {
+				//g.drawImage(icon4.getImage(), 0, 0, null); // full size
+				Dimension d = getSize();
+				g.drawImage(titleImg.getImage(), 0, 0, d.width, d.height, null); // get size
+				
+				setOpaque(false); //그림을 표시하게 설정,투명하게 조절
+                super.paintComponent(g);
+			}
+		};
+		
+		title.setBackground(Color.WHITE);
+		title.setBounds(208, 10, 400, 65);
+		contentPane.add(title);
 
 		try {
 			socket = new Socket(ip_addr, Integer.parseInt(port_no));
@@ -420,42 +476,6 @@ public class JavaGameClientView extends JFrame {
 		}
 	}
 	
-	public void AppendImage(ImageIcon ori_icon) {
-		int len = textArea.getDocument().getLength();
-		textArea.setCaretPosition(len); // place caret at the end (with no selection)
-		Image ori_img = ori_icon.getImage();
-		Image new_img;
-		ImageIcon new_icon;
-		int width, height;
-		double ratio;
-		width = ori_icon.getIconWidth();
-		height = ori_icon.getIconHeight();
-		// Image가 너무 크면 최대 가로 또는 세로 200 기준으로 축소시킨다.
-		if (width > 200 || height > 200) {
-			if (width > height) { // 가로 사진
-				ratio = (double) height / width;
-				width = 200;
-				height = (int) (width * ratio);
-			} else { // 세로 사진
-				ratio = (double) width / height;
-				height = 200;
-				width = (int) (height * ratio);
-			}
-			new_img = ori_img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-			new_icon = new ImageIcon(new_img);
-			textArea.insertIcon(new_icon);
-		} else {
-			textArea.insertIcon(ori_icon);
-			new_img = ori_img;
-		}
-		len = textArea.getDocument().getLength();
-		textArea.setCaretPosition(len);
-		textArea.replaceSelection("\n");
-		// ImageViewAction viewaction = new ImageViewAction();
-		// new_icon.addActionListener(viewaction); // 내부클래스로 액션 리스너를 상속받은 클래스로
-		gc.drawImage(ori_img, 0, 0, panel.getWidth(), panel.getHeight(), this);
-	}
-
 	// Windows 처럼 message 제외한 나머지 부분은 NULL 로 만들기 위한 함수
 	public byte[] MakePacket(String msg) {
 		byte[] packet = new byte[BUF_LEN];
