@@ -20,6 +20,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.Socket;
+import java.util.Vector;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -29,6 +30,7 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -78,7 +80,6 @@ public class JavaGameClientView extends JFrame {
 	private FileDialog fd;
 
 	private JPanel myinfo;
-	private JTable table;
 	private Graphics gc;
 	
 	private JPanel title;
@@ -94,6 +95,11 @@ public class JavaGameClientView extends JFrame {
 	ImageIcon face;
 	ImageIcon button;
 	ImageIcon titleImg;
+	
+	
+	DefaultListModel<String> model;
+	// 리스트 선언
+	private JList list;
 	
 	/**
 	 * Create the frame.
@@ -132,10 +138,6 @@ public class JavaGameClientView extends JFrame {
 		textArea.setEditable(true);
 		textArea.setFont(new Font("굴림체", Font.PLAIN, 14));
 		scrollPane.setRowHeaderView(textArea);
-
-		table = new JTable();
-		table.setBounds(27, 192, 157, 353);
-		contentPane.add(table);
 		
 		myinfo = new JPanel(){
 			public void paintComponent(Graphics g) {
@@ -238,7 +240,20 @@ public class JavaGameClientView extends JFrame {
 		title.setBackground(Color.WHITE);
 		title.setBounds(208, 10, 400, 65);
 		contentPane.add(title);
+		
+		model = new DefaultListModel<String>();
+		model.addElement(username);
+		
+		list = new JList(model);
+		list.setBorder(null);
+		
+		list.setBackground(new Color(0, 191, 255));
+		list.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 14));
+		getContentPane().add(list);
+		list.setBounds(27, 203, 157, 342);
+		contentPane.add(list);
 
+		
 		try {
 			socket = new Socket(ip_addr, Integer.parseInt(port_no));
 //			is = socket.getInputStream();
@@ -270,7 +285,9 @@ public class JavaGameClientView extends JFrame {
 			e.printStackTrace();
 			AppendText("connect error");
 		}
-
+		
+		
+		
 	}
 
 	// Server Message를 수신해서 화면에 표시
