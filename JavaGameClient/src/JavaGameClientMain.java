@@ -16,6 +16,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 
 public class JavaGameClientMain extends JFrame {
 
@@ -54,23 +55,14 @@ public class JavaGameClientMain extends JFrame {
 	public JavaGameClientMain() {
 		setBackground(new Color(255, 255, 255));
 		
-		icon1 = new ImageIcon("C:/Users/qhrms.DESKTOP-6KE9FVU/git/repository/JavaGameClient/images/main.jpg");
-		icon2 = new ImageIcon("C:/Users/qhrms.DESKTOP-6KE9FVU/git/repository/JavaGameClient/images/double.png");
-		icon3 = new ImageIcon("C:/Users/qhrms.DESKTOP-6KE9FVU/git/repository/JavaGameClient/images/chara_shiro.png");
-		icon4 = new ImageIcon("C:/Users/qhrms.DESKTOP-6KE9FVU/git/repository/JavaGameClient/images/image5.png");
+		icon1 = new ImageIcon("C:/Users/Network/JavaGameClient/images/main.jpg");
+		icon2 = new ImageIcon("C:/Users/Network/JavaGameClient/images/double.png");
+		icon3 = new ImageIcon("C:/Users/Network/JavaGameClient/images/chara_shiro.png");
+		icon4 = new ImageIcon("C:/Users/Network/JavaGameClient/images/image5.png");
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 604, 502);
-		contentPane = new JPanel(); /* {
-			public void paintComponent(Graphics g) {
-				//g.drawImage(icon4.getImage(), 0, 0, null); // full size
-				Dimension d = getSize();
-				 g.drawImage(icon4.getImage(), 0, 0, d.width, d.height, null); // get size
-				
-				 setOpaque(false); //그림을 표시하게 설정,투명하게 조절
-                super.paintComponent(g);
-			}
-		}; */
+		contentPane = new JPanel();
 				
 		contentPane.setBackground(new Color(255, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -110,7 +102,10 @@ public class JavaGameClientMain extends JFrame {
 		contentPane.add(txtPortNumber);
 		
 		JButton btnConnect = new JButton("Connect");
-		btnConnect.setBounds(188, 295, 205, 38);
+		btnConnect.setBackground(new Color(255, 255, 255));
+		btnConnect.setFont(new Font("굴림", Font.PLAIN, 14));
+		btnConnect.setBounds(208, 295, 160, 40);
+		
 		contentPane.add(btnConnect);
 		
 		JPanel panel = new JPanel() {
@@ -122,8 +117,8 @@ public class JavaGameClientMain extends JFrame {
 				 setOpaque(false); //그림을 표시하게 설정,투명하게 조절
                 super.paintComponent(g);
 			}
-		};	
-		// panel.setBackground(new Color(255, 255, 255));
+		};
+		
 		panel.setBounds(171, 10, 242, 100);
 		contentPane.add(panel);
 		
@@ -152,7 +147,10 @@ public class JavaGameClientMain extends JFrame {
 			String username = txtUserName.getText().trim();
 			String ip_addr = txtIpAddress.getText().trim();
 			String port_no = txtPortNumber.getText().trim();
-			JavaGameClientView view = new JavaGameClientView(username, ip_addr, port_no);
+			
+			SelectCharacter view = new SelectCharacter(username, ip_addr, port_no);
+			
+			// JavaGameClientView view = new JavaGameClientView(username, ip_addr, port_no);
 			setVisible(false);
 		}
 	}

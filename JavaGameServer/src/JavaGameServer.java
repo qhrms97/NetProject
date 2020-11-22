@@ -27,7 +27,6 @@ import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
 
 public class JavaGameServer extends JFrame {
-
 	/**
 	 * 
 	 */
@@ -35,10 +34,18 @@ public class JavaGameServer extends JFrame {
 	private JPanel contentPane;
 	JTextArea textArea;
 	private JTextField txtPortNumber;
-
 	private ServerSocket socket; // 서버소켓
 	private Socket client_socket; // accept() 에서 생성된 client 소켓
-	private Vector UserVec = new Vector(); // 연결된 사용자를 저장할 벡터
+
+	private Vector UserVec = new Vector();// 연결된 사용자를 저장할 벡터 ,모든 유저 벡터
+	private Vector waitVec = new Vector<>(); // 대기방 유저
+	private Vector<RoomManager> RoomVec = new Vector<RoomManager>();
+
+	
+	
+	
+
+
 	private static final int BUF_LEN = 128; // Windows 처럼 BUF_LEN 을 정의
 
 	/**
@@ -120,6 +127,7 @@ public class JavaGameServer extends JFrame {
 					// User 당 하나씩 Thread 생성
 					UserService new_user = new UserService(client_socket);
 					UserVec.add(new_user); // 새로운 참가자 배열에 추가
+					waitVec.add(new_user); // 새로운 참가자 대기실에 추가
 					new_user.start(); // 만든 객체의 스레드 실행
 					AppendText("현재 참가자 수 " + UserVec.size());
 				} catch (IOException e) {
@@ -158,7 +166,13 @@ public class JavaGameServer extends JFrame {
 		private Socket client_socket;
 		private Vector user_vc;
 		public String UserName = "";
+
+		// 방번호 및 userstatus
 		public String UserStatus;
+		
+		//Game Room 관리
+		public int RoomNum;
+		public String RoomName;
 
 		public UserService(Socket client_socket) {
 			// TODO Auto-generated constructor stub
@@ -195,7 +209,19 @@ public class JavaGameServer extends JFrame {
 			WriteOne("Welcome to Java chat server\n");
 			WriteOne(UserName + "님 환영합니다.\n"); // 연결된 사용자에게 정상접속을 알림
 			String msg = "[" + UserName + "]님이 입장 하였습니다.\n";
+			ChatMsg obcm = new ChatMsg(UserName, "120", "");
 			WriteOthers(msg); // 아직 user_vc에 새로 입장한 user는 포함되지 않았다.
+			WriteAllObject(obcm);
+		}
+		
+		public void Join() {
+			AppendText("새로운 참가자 " + UserName + " 입장.");
+			WriteOne("Welcome to " +RoomName+"\n");
+			WriteOne(UserName + "님 환영합니다.\n"); // 연결된 사용자에게 정상접속을 알림
+			String msg = "[" + UserName + "]님이 입장 하였습니다.\n";
+			ChatMsg obcm = new ChatMsg(UserName, "120", "");
+			GmOthers(msg); // 아직 user_vc에 새로 입장한 user는 포함되지 않았다.
+			GMAllObject(obcm);
 		}
 
 		public void Logout() {
@@ -213,11 +239,21 @@ public class JavaGameServer extends JFrame {
 					user.WriteOne(str);
 			}
 		}
+
 		// 모든 User들에게 Object를 방송. 채팅 message와 image object를 보낼 수 있다
 		public void WriteAllObject(Object ob) {
 			for (int i = 0; i < user_vc.size(); i++) {
 				UserService user = (UserService) user_vc.elementAt(i);
 				if (user.UserStatus == "O")
+					user.WriteOneObject(ob);
+			}
+		}
+		
+	
+		public void GMAllObject(Object ob) {
+			for (int i = 0; i < user_vc.size(); i++) {
+				UserService user = (UserService) user_vc.elementAt(i);
+				if (RoomNum == user.RoomNum && user.UserStatus == "G")
 					user.WriteOneObject(ob);
 			}
 		}
@@ -230,7 +266,17 @@ public class JavaGameServer extends JFrame {
 					user.WriteOne(str);
 			}
 		}
+		// 나를 제외한 User들에게 방송. 각각의 UserService Thread의 WriteONe() 을 호출한다.
 
+		public void GmOthers(String str) {
+			for (int i = 0; i < user_vc.size(); i++) {
+				UserService user = (UserService) user_vc.elementAt(i);
+				if (user != this && user.UserStatus == "G")
+					user.WriteOne(str);
+			}
+		}
+		
+	
 		// Windows 처럼 message 제외한 나머지 부분은 NULL 로 만들기 위한 함수
 		public byte[] MakePacket(String msg) {
 			byte[] packet = new byte[BUF_LEN];
@@ -297,19 +343,21 @@ public class JavaGameServer extends JFrame {
 				Logout(); // 에러가난 현재 객체를 벡터에서 지운다
 			}
 		}
+
+
+
 		public void WriteOneObject(Object ob) {
 			try {
-			    oos.writeObject(ob);
-			} 
-			catch (IOException e) {
-				AppendText("oos.writeObject(ob) error");		
+				oos.writeObject(ob);
+			} catch (IOException e) {
+				AppendText("oos.writeObject(ob) error");
 				try {
 					ois.close();
 					oos.close();
 					client_socket.close();
 					client_socket = null;
 					ois = null;
-					oos = null;				
+					oos = null;
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -317,7 +365,7 @@ public class JavaGameServer extends JFrame {
 				Logout();
 			}
 		}
-		
+
 		public void run() {
 			while (true) { // 사용자 접속을 계속해서 받기 위해 while문
 				try {
@@ -358,11 +406,88 @@ public class JavaGameServer extends JFrame {
 						AppendObject(cm);
 					} else
 						continue;
+					
+					
 					if (cm.code.matches("100")) {
+						
 						UserName = cm.UserName;
 						UserStatus = "O"; // Online 상태
 						Login();
-					} else if (cm.code.matches("200")) {
+						for(int i =0; i < RoomVec.size(); i++)
+						{
+								obcm = new ChatMsg("SERVER", "160",RoomVec.get(i).title);
+						}
+						
+						for (int i = 0; i < user_vc.size(); i++) {
+							UserService user = (UserService) user_vc.elementAt(i);
+								user.WriteOneObject(obcm);
+						}
+					}
+					// 캐릭터 선택
+					else if(cm.code.matches("110")) {
+						
+					}
+					else if (cm.code.matches("160")) 
+					{ // 방생성
+						RoomManager room = new RoomManager();
+						//String[] args = msg.split(" "); // 단어들을 분리한다. msg = roomname , 
+						room.title = cm.data;
+						room.boss = UserName;
+						room.RoomNum =cm.roomNum;
+						RoomVec.add(room);
+						System.out.println("size = "+ RoomVec.size());
+						
+						for(int i =0; i < RoomVec.size(); i++)
+						{
+								obcm = new ChatMsg("SERVER", "160",RoomVec.get(i).title);
+						}
+						
+						for (int i = 0; i < user_vc.size(); i++) {
+							UserService user = (UserService) user_vc.elementAt(i);
+							if(user != this)
+								user.WriteOneObject(obcm);
+						}
+							
+					}
+					else if (cm.code.matches("180")) { // 방입장
+							UserStatus = "G";
+
+							System.out.println("roomsize= "+RoomVec.size());
+
+							for(int i =0; i < RoomVec.size(); i++)
+							{
+								System.out.println("RoomNum = "+RoomVec.get(i).RoomNum);
+								if(RoomVec.get(i).RoomNum == cm.roomNum)
+								{
+									RoomNum =i;
+								}
+							}							
+							RoomVec.get(RoomNum).UserV.add(UserName);
+							RoomVec.get(RoomNum).count++; 
+							Join();						 
+					}
+					
+					else if (cm.code.matches("190")) { // 방퇴장
+						//GetRoomNum(cm,RoomVec);
+						RoomVec.get(RoomNum).count--; 
+						if(RoomVec.get(RoomNum).count ==0)
+						{
+							for(int i =0; i < RoomVec.size(); i++)
+							{
+								if(RoomVec.get(i).RoomNum == cm.roomNum)
+								{
+									RoomVec.remove(i);
+									obcm = new ChatMsg("SERVER", "170","삭제");
+									for (int j = 0; j < user_vc.size(); j++) 
+									{  
+										UserService user = (UserService) user_vc.elementAt(i);
+										user.WriteOneObject(obcm);
+									}
+								}
+							}	
+						}
+				}
+					else if (cm.code.matches("200")) {
 						msg = String.format("[%s] %s", cm.UserName, cm.data);
 						AppendText(msg); // server 화면에 출력
 						String[] args = msg.split(" "); // 단어들을 분리한다.
@@ -396,21 +521,25 @@ public class JavaGameServer extends JFrame {
 									}
 									// /to 빼고.. [귓속말] [user1] Hello user2..
 									user.WritePrivate(args[0] + " " + msg2 + "\n");
-									//user.WriteOne("[귓속말] " + args[0] + " " + msg2 + "\n");
+									// user.WriteOne("[귓속말] " + args[0] + " " + msg2 + "\n");
 									break;
 								}
 							}
+						} else if (UserStatus == "G") { // GameRoom msg
+							GMAllObject(cm);
 						} else { // 일반 채팅 메시지
+
 							UserStatus = "O";
-							//WriteAll(msg + "\n"); // Write All
+							// WriteAll(msg + "\n"); // Write All
 							WriteAllObject(cm);
+
 						}
 					} else if (cm.code.matches("400")) { // logout message 처리
 						Logout();
 						break;
 					} else { // 300, 500, ... 기타 object는 모두 방송한다.
 						WriteAllObject(cm);
-					} 
+					}
 				} catch (IOException e) {
 					AppendText("ois.readObject() error");
 					try {
