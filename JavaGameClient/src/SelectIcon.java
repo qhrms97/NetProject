@@ -36,8 +36,9 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.Icon;
+import java.awt.Button;
 
-public class SelectCharacter extends JFrame {
+public class SelectIcon extends JFrame {
    /**
     * 
     */
@@ -61,6 +62,7 @@ public class SelectCharacter extends JFrame {
    ImageIcon titleImg;
    ImageIcon select;
    ImageIcon main;
+   ImageIcon enter;
    
    private JPanel SelectImage;
    private JButton btnEnterButton;
@@ -78,16 +80,16 @@ public class SelectCharacter extends JFrame {
     * Create the frame.
     * @throws BadLocationException N
     */
-   public SelectCharacter(String username, String ip_addr, String port_no)  {
-	  
-	  
+   public SelectIcon(String username, String ip_addr, String port_no)  {
 	   
       darkbackground = new ImageIcon("C:/Users/Network/JavaGameClient/images/aqua.jpg");
       face = new ImageIcon("C:/Users/Network/JavaGameClient/images/chara_mizu.png");
       button = new ImageIcon("C:/Users/Network/JavaGameClient/images/blue.jpg");
       titleImg = new ImageIcon("C:/Users/Network/JavaGameClient/images/title.png");
-      select = new ImageIcon("C:/Users/Network/JavaGameClient/images/select.png");
+      select = new ImageIcon("C:/Users/Network/JavaGameClient/images/selecticon.png");
       main = new ImageIcon("C:/Users/Network/JavaGameClient/images/main2.png");
+     
+      
       
       icon[0] = new ImageIcon("C:/Users/Network/JavaGameClient/images/chara_aka.png");
       icon[1] = new ImageIcon("C:/Users/Network/JavaGameClient/images/chara_ao.png");
@@ -97,6 +99,9 @@ public class SelectCharacter extends JFrame {
       icon[5] = new ImageIcon("C:/Users/Network/JavaGameClient/images/chara_pink.png");
       icon[6] = new ImageIcon("C:/Users/Network/JavaGameClient/images/chara_shiro.png");
       icon[7] = new ImageIcon("C:/Users/Network/JavaGameClient/images/chara_shiro2.png");
+      
+      // Enter Button
+      icon[8] = new ImageIcon("C:/Users/Network/JavaGameClient/images/enter.png");
       
       // icon 크기 변경 -JLabel과 크기 일치하기 위해
       Image icon1 = icon[0].getImage();
@@ -120,7 +125,7 @@ public class SelectCharacter extends JFrame {
       ImageIcon changeIcon5 = new ImageIcon(changeImg5);
       
       Image icon6 = icon[5].getImage();
-      Image changeImg6 = icon1.getScaledInstance(130, 130, Image.SCALE_SMOOTH);
+      Image changeImg6 = icon6.getScaledInstance(130, 130, Image.SCALE_SMOOTH);
       ImageIcon changeIcon6 = new ImageIcon(changeImg6);
       
       Image icon7 = icon[6].getImage();
@@ -128,9 +133,12 @@ public class SelectCharacter extends JFrame {
       ImageIcon changeIcon7 = new ImageIcon(changeImg7);
       
       Image icon8 = icon[7].getImage();
-      Image changeImg8 = icon1.getScaledInstance(130, 130, Image.SCALE_SMOOTH);
+      Image changeImg8 = icon8.getScaledInstance(130, 130, Image.SCALE_SMOOTH);
       ImageIcon changeIcon8 = new ImageIcon(changeImg8);
       
+      Image enter = icon[8].getImage();
+      Image enterchange = enter.getScaledInstance(140, 50, Image.SCALE_SMOOTH);
+      ImageIcon enterIcon = new ImageIcon(enterchange);
       
       // 여기서 부터 시작
       setResizable(false);
@@ -250,15 +258,19 @@ public class SelectCharacter extends JFrame {
       btnImageButton_8.setBounds(517, 226, 100, 105);
       contentPane.add(btnImageButton_8);
       
-      btnEnterButton = new JButton("입장");
+      btnEnterButton = new JButton();
+      btnEnterButton.setBorderPainted(false);
+      btnEnterButton.setContentAreaFilled(false);
+      btnEnterButton.setIcon(enterIcon);
       btnEnterButton.setFont(new Font("굴림", Font.BOLD, 14));
-      btnEnterButton.setBackground(new Color(255, 255, 255));
+      btnEnterButton.setBackground(new Color(255, 0, 0,0 ));
       btnEnterButton.addActionListener(new ActionListener() {
       	public void actionPerformed(ActionEvent e) {
       		JavaGameClientView view = new JavaGameClientView(username, ip_addr, port_no, num);
+      		setVisible(false);
       	}
       });
-      btnEnterButton.setBounds(13, 290, 130, 40);
+      btnEnterButton.setBounds(13, 290, 140, 50);
       contentPane.add(btnEnterButton);
       
       SelectImage = new JPanel() {
